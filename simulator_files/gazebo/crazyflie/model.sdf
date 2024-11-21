@@ -40,35 +40,80 @@ Copyright (c) 2024 Bitcraze
           </mesh>
         </geometry>
       </visual>
-      <sensor name='multiranger' type='gpu_lidar'>"
-        <pose relative_to='crazyflie/base_link'>0 0 0.1 0 0 0</pose>
+
+      <!-- <sensor name='gpu_lidar' type='gpu_lidar'>
         <topic>lidar</topic>
         <update_rate>10</update_rate>
-        <ray>
+        <lidar>
           <scan>
             <horizontal>
-                <samples>4</samples>
-                <resolution>1</resolution>
-                <min_angle>-3.14</min_angle>
-                <max_angle>1.57</max_angle>
+              <samples>640</samples>
+              <resolution>1</resolution>
+              <min_angle>-1.396263</min_angle>
+              <max_angle>1.396263</max_angle>
             </horizontal>
             <vertical>
-                <samples>1</samples>
-                <resolution>0.01</resolution>
-                <min_angle>0</min_angle>
-                <max_angle>0</max_angle>
+              <samples>16</samples>
+              <resolution>1</resolution>
+              <min_angle>-0.261799</min_angle>
+              <max_angle>0.261799</max_angle>
             </vertical>
           </scan>
           <range>
-            <min>0.01</min>
-            <max>3.49</max>
+            <min>0.08</min>
+            <max>10.0</max>
             <resolution>0.01</resolution>
           </range>
-        </ray>
+        </lidar>
+        <alwaysOn>1</alwaysOn>
+        <visualize>true</visualize>
+      </sensor>  -->
+
+      <!-- <sensor name="depth_camera" type="depth_camera">
+        <pose relative_to="crazyflie/body">0 0 0.1 0 0 0</pose>
+        <topic>depth_camera</topic>
+        <update_rate>30</update_rate>
+        <camera>
+          <horizontal_fov>1.047</horizontal_fov> 
+          <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.1</near>
+            <far>10.0</far>
+          </clip>
+          <depth_camera>
+            <output>depth</output>
+          </depth_camera>
+        </camera>
         <always_on>1</always_on>
         <visualize>true</visualize>
+      </sensor> -->
+
+      <sensor name="rgbd_camera" type="rgbd_camera">
+        <pose relative_to="crazyflie/body">0 0 0.1 0 0 0</pose>
+        <camera>
+          <horizontal_fov>1.047</horizontal_fov>
+          <image>
+            <width>320</width>
+            <height>240</height>
+          </image>
+          <clip>
+            <near>0.1</near>
+            <far>100</far>
+          </clip>
+        </camera>
+        <always_on>1</always_on>
+        <update_rate>30</update_rate>
+        <visualize>true</visualize>
+        <topic>rgbd_camera</topic>
       </sensor>
+
+
     </link>
+
     <link name="crazyflie/m1_prop">
       <pose>0.031 -0.031 0.021 0 0 0</pose>
       <inertial>
@@ -169,8 +214,9 @@ Copyright (c) 2024 Bitcraze
         <xyz>0 0 1</xyz>
       </axis>
     </joint>
+
     <plugin
-      filename="gz-sim-multicopter-motor-model-system"
+      filename="ignition-gazebo-multicopter-motor-model-system"
       name="gz::sim::systems::MulticopterMotorModel">
       <robotNamespace>crazyflie</robotNamespace>
       <jointName>crazyflie/m1_joint</jointName>
@@ -184,9 +230,12 @@ Copyright (c) 2024 Bitcraze
       <rotorVelocitySlowdownSim>20</rotorVelocitySlowdownSim>
       <actuator_number>0</actuator_number>
       <motorType>velocity</motorType>
+      <motorNumber>0</motorNumber>
     </plugin>
+
+
     <plugin
-      filename="gz-sim-multicopter-motor-model-system"
+      filename="ignition-gazebo-multicopter-motor-model-system"
       name="gz::sim::systems::MulticopterMotorModel">
       <robotNamespace>crazyflie</robotNamespace>
       <jointName>crazyflie/m2_joint</jointName>
@@ -200,9 +249,11 @@ Copyright (c) 2024 Bitcraze
       <rotorVelocitySlowdownSim>20</rotorVelocitySlowdownSim>
       <actuator_number>1</actuator_number>
       <motorType>velocity</motorType>
+      <motorNumber>1</motorNumber>
     </plugin>
+
     <plugin
-      filename="gz-sim-multicopter-motor-model-system"
+      filename="ignition-gazebo-multicopter-motor-model-system"
       name="gz::sim::systems::MulticopterMotorModel">
       <robotNamespace>crazyflie</robotNamespace>
       <jointName>crazyflie/m3_joint</jointName>
@@ -216,9 +267,12 @@ Copyright (c) 2024 Bitcraze
       <rotorVelocitySlowdownSim>20</rotorVelocitySlowdownSim>
       <actuator_number>2</actuator_number>
       <motorType>velocity</motorType>
+      <motorNumber>2</motorNumber>
     </plugin>
+
+
     <plugin
-      filename="gz-sim-multicopter-motor-model-system"
+      filename="ignition-gazebo-multicopter-motor-model-system"
       name="gz::sim::systems::MulticopterMotorModel">
       <robotNamespace>crazyflie</robotNamespace>
       <jointName>crazyflie/m4_joint</jointName>
@@ -232,9 +286,11 @@ Copyright (c) 2024 Bitcraze
       <rotorVelocitySlowdownSim>20</rotorVelocitySlowdownSim>
       <actuator_number>3</actuator_number>
       <motorType>velocity</motorType>
+      <motorNumber>3</motorNumber>
     </plugin>
+
     <plugin
-      filename="gz-sim-multicopter-control-system"
+      filename="ignition-gazebo-multicopter-control-system"
       name="gz::sim::systems::MulticopterVelocityControl">
       <robotNamespace>crazyflie</robotNamespace>
       <commandSubTopic>gazebo/command/twist</commandSubTopic>
@@ -270,10 +326,12 @@ Copyright (c) 2024 Bitcraze
         </rotor>
       </rotorConfiguration>
     </plugin>
+    
     <plugin
-      filename="gz-sim-odometry-publisher-system"
-      name="gz::sim::systems::OdometryPublisher">
+      filename="ignition-gazebo-odometry-publisher-system"
+      name="ignition::gazebo::systems::OdometryPublisher">
       <dimensions>3</dimensions>
     </plugin>
+    
   </model>
 </sdf>
