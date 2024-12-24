@@ -41,76 +41,33 @@ Copyright (c) 2024 Bitcraze
         </geometry>
       </visual>
 
-      <!-- <sensor name='gpu_lidar' type='gpu_lidar'>
-        <topic>lidar</topic>
-        <update_rate>10</update_rate>
-        <lidar>
-          <scan>
-            <horizontal>
-              <samples>640</samples>
-              <resolution>1</resolution>
-              <min_angle>-1.396263</min_angle>
-              <max_angle>1.396263</max_angle>
-            </horizontal>
-            <vertical>
-              <samples>16</samples>
-              <resolution>1</resolution>
-              <min_angle>-0.261799</min_angle>
-              <max_angle>0.261799</max_angle>
-            </vertical>
-          </scan>
-          <range>
-            <min>0.08</min>
-            <max>10.0</max>
-            <resolution>0.01</resolution>
-          </range>
-        </lidar>
-        <alwaysOn>1</alwaysOn>
-        <visualize>true</visualize>
-      </sensor>  -->
-
-      <!-- <sensor name="depth_camera" type="depth_camera">
-        <pose relative_to="crazyflie/body">0 0 0.1 0 0 0</pose>
-        <topic>depth_camera</topic>
-        <update_rate>30</update_rate>
-        <camera>
-          <horizontal_fov>1.047</horizontal_fov> 
-          <image>
-            <width>640</width>
-            <height>480</height>
-            <format>R8G8B8</format>
-          </image>
-          <clip>
-            <near>0.1</near>
-            <far>10.0</far>
-          </clip>
-          <depth_camera>
-            <output>depth</output>
-          </depth_camera>
-        </camera>
-        <always_on>1</always_on>
-        <visualize>true</visualize>
-      </sensor> -->
-
-      <sensor name="rgbd_camera" type="rgbd_camera">
-        <pose relative_to="crazyflie/body">0 0 0.1 0 0 0</pose>
-        <camera>
-          <horizontal_fov>1.047</horizontal_fov>
-          <image>
-            <width>320</width>
-            <height>240</height>
-          </image>
-          <clip>
-            <near>0.1</near>
-            <far>100</far>
-          </clip>
-        </camera>
-        <always_on>1</always_on>
-        <update_rate>30</update_rate>
-        <visualize>true</visualize>
-        <topic>rgbd_camera</topic>
-      </sensor>
-
+	<sensor name="camera" type="rgbd_camera">
+	  <pose relative_to="crazyflie/base_footprint">0 0 0.1 0 0 0</pose>
+	  <always_on>true</always_on>
+	  <visualize>true</visualize>
+	  <update_rate>30</update_rate>
+	  <camera_info_topic>/camera/rgbd/camera_info</camera_info_topic>
+	  <topic>/camera/rgbd/image_raw</topic>
+	  <ignition_frame_id>map</ignition_frame_id>
+	  <camera name="intel_realsense_r200">
+	    <horizontal_fov>1.047</horizontal_fov>
+	    <image>
+	      <width>320</width>
+	      <height>240</height>
+	    </image>
+	    <clip>
+	      <near>0.1</near>
+	      <far>100</far>
+	    </clip>
+	  </camera>
+	  <plugin
+	    filename="RosGzPointCloud"
+	    name="ros_gz_point_cloud::PointCloud">
+	    <namespace>custom_params</namespace>
+	    <topic>pc2</topic>
+	    <frame_id>map</frame_id>
+	  </plugin>
+	</sensor>
 
     </link>
 
@@ -331,6 +288,13 @@ Copyright (c) 2024 Bitcraze
       filename="ignition-gazebo-odometry-publisher-system"
       name="ignition::gazebo::systems::OdometryPublisher">
       <dimensions>3</dimensions>
+    </plugin>
+    
+    
+    <!-- Joint state publisher -->
+    <plugin filename="libignition-gazebo-joint-state-publisher-system.so" 
+      name="ignition::gazebo::systems::JointStatePublisher">
+      <topic>joint_states</topic>
     </plugin>
     
   </model>
